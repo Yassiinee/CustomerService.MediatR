@@ -1,37 +1,85 @@
 ﻿using MediatR;
 using MediatRHandlers.Infrastructure;
+using Serilog;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-//
-// Add controllers (API endpoints)
-//
-builder.Services.AddControllers();
+// ------------------------
+// Configure Serilog
+// ------------------------
+// Add this before creating the logger
+string logsPath = Path.Combine(Directory.GetCurrentDirectory(), "Logs");
+Directory.CreateDirectory(logsPath);
 
-//
-// Register MediatR (scan handlers assembly)
-//
+Log.Logger = new LoggerConfiguration()
+    .Enrich.FromLogContext()
+    .Enrich.WithThreadId()
+    .Enrich.WithEnvironmentName()
+    .WriteTo.Console()
+    .WriteTo.File(
+        path: Path.Combine(logsPath, "log-.txt"),
+        rollingInterval: RollingInterval.Day,
+        outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] [{ThreadId}] {Message:lj}{NewLine}{Exception}")
+    .MinimumLevel.Debug()
+    .CreateLogger();
+
+builder.Host.UseSerilog();
+
+// ------------------------
+// CORS Configuration
+// ------------------------
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AppPolicy", policy =>
+    {
+        if (builder.Environment.IsDevelopment())
+        {
+            policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+        }
+        else
+        {
+            string[] allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>() ?? [];
+            policy.WithOrigins(allowedOrigins)
+                  .AllowAnyMethod()
+                  .AllowAnyHeader()
+                  .AllowCredentials();
+        }
+    });
+});
+
+// ------------------------
+// Core Services
+// ------------------------
+builder.Services.AddControllers();
+builder.Services.AddHealthChecks();
+
+// ------------------------
+// MediatR Configuration
+// ------------------------
 builder.Services.AddMediatR(cfg =>
 {
     cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly);
 });
 
-//
-// Register Application / Infrastructure dependencies
-//
+// ------------------------
+// Application Services
+// ------------------------
 builder.Services.AddApplication();
 
-//
-// Swagger (API documentation)
-//
+// ------------------------
+// Swagger Configuration
+// ------------------------
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new() { Title = "CustomerService.MediatR API", Version = "v1" });
+});
 
 WebApplication app = builder.Build();
 
-//
-// HTTP request pipeline
-//
+// ------------------------
+// HTTP Request Pipeline
+// ------------------------
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -39,9 +87,24 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseCors("AppPolicy");
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHealthChecks("/health");
 
-app.Run();
+try
+{
+    Log.Information("Starting CustomerService.MediatR API on {Environment}", app.Environment.EnvironmentName);
+    app.Run();
+}
+catch (Exception ex)
+{
+    Log.Fatal(ex, "Application terminated unexpectedly!");
+    throw;
+}
+finally
+{
+    await Log.CloseAndFlushAsync();
+}
