@@ -1,27 +1,44 @@
-﻿using MediatRHandlers;
-using MediatRHandlers.Repositories;
+﻿using MediatR;
+using MediatRHandlers.Infrastructure;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
-builder.Services.RegisterRequestHandlers();
-
+//
+// Add controllers (API endpoints)
+//
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+//
+// Register MediatR (scan handlers assembly)
+//
+builder.Services.AddMediatR(cfg =>
+{
+    cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly);
+});
+
+//
+// Register Application / Infrastructure dependencies
+//
+builder.Services.AddApplication();
+
+//
+// Swagger (API documentation)
+//
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-
-
 WebApplication app = builder.Build();
 
-// Configure the HTTP request pipeline.
+//
+// HTTP request pipeline
+//
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
