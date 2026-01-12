@@ -1,152 +1,163 @@
-# Customer Service MediatR
+# CustomerService.MediatR
 
-A .NET 10 Web API project demonstrating the MediatR pattern implementation for customer management operations.
+A clean, production-ready **ASP.NET Core Web API** demonstrating **DDD (Domain-Driven Design)**,
+**CQRS**, **MediatR**, and **FluentValidation** best practices.
 
-## Overview
+This project is designed as a **reference architecture** for building scalable, testable, and maintainable backend services.
 
-This solution showcases the use of the **MediatR** library to implement the Mediator pattern in a clean architecture approach. The project separates concerns between API endpoints and business logic handlers, promoting loose coupling and testability.
+---
 
-## Architecture
+## 🧱 Architecture Overview
 
-The solution consists of two main projects:
+The solution follows **Clean Architecture** principles:
 
-### 1. **MediatRHandlers** (Class Library)
-Contains the core business logic and domain models:
-
-- **Entities**: Domain models
-  - `Customer.cs` - Customer entity with properties: FirstName, LastName, EmailAddress, Address
-
-- **Requests**: MediatR request objects
-  - `CreateCustomerRequest.cs` - Request to create a new customer (returns int)
-  - `GetCustomerRequest.cs` - Request to retrieve a customer by ID
-
-- **RequestHandlers**: MediatR request handlers
-  - `CreateCustomerHandler.cs` - Handles customer creation logic
-  - `GetCustomerHandler.cs` - Handles customer retrieval logic
-
-- **Repositories**: Data access layer
-  - `ICustomerRepository.cs` - Repository interface
-  - `CustomerRepository.cs` - In-memory implementation using Dictionary<int, Customer>
-
-- **MediatRDependencyHandler.cs**: Extension methods for dependency injection setup
-
-### 2. **MediatRAPI** (ASP.NET Core Web API)
-The REST API layer:
-
-- **Controllers**
-  - `CustomerController.cs` - Exposes HTTP endpoints for customer operations
-
-- **Program.cs**: Application configuration and startup
-
-## Features
-
-- **MediatR Pattern**: Decouples request/response from handlers
-- **Repository Pattern**: Abstracts data access logic
-- **Dependency Injection**: Fully integrated with ASP.NET Core DI
-- **Swagger/OpenAPI**: API documentation and testing interface
-- **In-Memory Storage**: Simple dictionary-based storage for demo purposes
-
-## API Endpoints
-
-### Get Customer
 ```
-GET /Customer/customerId?customerId={id}
-```
-Returns customer details for the specified ID.
-
-### Create Customer
-```
-POST /Customer
-```
-Creates a new customer and returns the assigned customer ID.
-
-**Request Body:**
-```json
-{
-  "firstName": "string",
-  "lastName": "string",
-  "emailAddress": "string",
-  "address": "string"
-}
+CustomerService.MediatR
+│
+├─ MediatRAPI                → API layer (HTTP, Controllers, Swagger)
+├─ MediatRHandlers           → Application, Domain & Infrastructure
+└─ CustomerService.MediatR.sln
 ```
 
-## Technology Stack
+### Layer Responsibilities
 
-- **.NET 10**
-- **ASP.NET Core Web API**
-- **MediatR** - Mediator pattern implementation
-- **Swashbuckle.AspNetCore** - Swagger/OpenAPI support
-- **C# 14.0**
+| Layer | Responsibility |
+|-----|---------------|
+API | HTTP endpoints, request/response mapping |
+Application | CQRS, MediatR requests & handlers |
+Domain | Business entities & rules |
+Infrastructure | Persistence, external services |
 
-## Getting Started
+---
+
+## 🧠 Key Concepts
+
+### ✔ MediatR
+- Decouples controllers from business logic
+- Implements **Command / Query** separation
+- Improves testability and maintainability
+
+### ✔ CQRS
+- **Commands** → change state
+- **Queries** → read data
+- Clear separation of responsibilities
+
+### ✔ DDD
+- Business logic lives in the **Domain**
+- Infrastructure details are abstracted
+- Strong boundaries between layers
+
+### ✔ FluentValidation
+- Validates commands & queries
+- Executed automatically via MediatR pipeline
+- No validation logic in controllers
+
+---
+
+## 📁 Folder Structure
+
+```
+MediatRHandlers
+ ├─ Application
+ │   ├─ Customers
+ │   │   ├─ Commands
+ │   │   ├─ Queries
+ │   │   ├─ Dtos
+ │   │   └─ Validators
+ │   ├─ Common
+ │   │   ├─ Interfaces
+ │   │   └─ Behaviors
+ │
+ ├─ Domain
+ │   └─ Entities
+ │
+ └─ Infrastructure
+     ├─ Persistence
+     └─ DependencyInjection.cs
+```
+
+---
+
+## 🔄 Request Flow
+
+```
+HTTP Request
+   ↓
+Controller
+   ↓
+IMediator.Send()
+   ↓
+Validation Pipeline (FluentValidation)
+   ↓
+Request Handler
+   ↓
+Domain / Repository
+   ↓
+Response
+```
+
+---
+
+## 🚀 Getting Started
 
 ### Prerequisites
-- .NET 10 SDK
+- .NET 7 or later
+- Visual Studio / VS Code / Rider
 
-### Running the Application
+### Run the API
 
-1. Clone the repository
-2. Navigate to the solution directory
-3. Build the solution:
-   ```bash
-   dotnet build
-   ```
-4. Run the API:
-   ```bash
-   dotnet run --project MediatRAPI
-   ```
-5. Open Swagger UI in your browser (typically `https://localhost:5001/swagger` or `http://localhost:5000/swagger`)
-
-## Project Structure
-
-```
-CustomerService.MediatR/
-??? MediatRHandlers/
-?   ??? Entities/
-?   ?   ??? Customer.cs
-?   ??? Requests/
-?   ?   ??? CreateCustomerRequest.cs
-?   ?   ??? GetCustomerRequest.cs
-?   ??? RequestHandlers/
-?   ?   ??? CreateCustomerHandler.cs
-?   ?   ??? GetCustomerHandler.cs
-?   ??? Repositories/
-?   ?   ??? ICustomerRepository.cs
-?   ?   ??? CustomerRepository.cs
-?   ??? MediatRDependencyHandler.cs
-??? MediatRAPI/
-?   ??? Controllers/
-?   ?   ??? CustomerController.cs
-?   ??? Program.cs
-??? README.md
+```bash
+dotnet restore
+dotnet build
+dotnet run --project MediatRAPI
 ```
 
-## Design Patterns Used
+### Swagger UI
 
-1. **Mediator Pattern**: Via MediatR library to decouple request senders from handlers
-2. **Repository Pattern**: For data access abstraction
-3. **Dependency Injection**: For loose coupling and testability
-4. **CQRS-lite**: Separation of command (Create) and query (Get) operations
+```
+https://localhost:{port}/swagger
+```
 
-## Benefits of This Architecture
+---
 
-- **Separation of Concerns**: Clear boundaries between API, business logic, and data access
-- **Testability**: Easy to unit test handlers independently
-- **Maintainability**: Changes to handlers don't affect controllers
-- **Scalability**: Easy to add new requests and handlers
-- **Single Responsibility**: Each handler focuses on one specific operation
+## 🔧 Dependency Injection
 
-## Future Enhancements
+All services are registered via a single entry point:
 
-- Add FluentValidation for request validation
-- Implement persistent storage (SQL Server, PostgreSQL, etc.)
-- Add logging with Serilog or NLog
-- Implement authentication and authorization
-- Add unit tests and integration tests
-- Implement CQRS with separate read/write models
-- Add domain events
-- Implement API versioning
+```csharp
+builder.Services.AddApplication();
+```
 
-## License
+This ensures:
+- Loose coupling
+- Easy testing
+- Infrastructure independence
 
-This is a demonstration project for educational purposes.
+---
+
+## 🏗 Production-Ready Features
+
+✔ Clean Architecture  
+✔ MediatR pipelines  
+✔ FluentValidation  
+✔ Swagger documentation  
+✔ Scalable folder structure  
+✔ Test-friendly design  
+
+---
+
+## 🔮 Planned Enhancements
+
+- Global exception middleware
+- Serilog structured logging
+- EF Core + migrations
+- Domain events
+- Caching (Redis)
+- API versioning
+- Unit & integration tests
+
+---
+
+## 📜 License
+
+MIT License
