@@ -7,8 +7,7 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 // ------------------------
 // Configure Serilog
 // ------------------------
-// Add this before creating the logger
-string logsPath = Path.Combine(Directory.GetCurrentDirectory(), "Logs");
+string logsPath = Path.Combine(AppContext.BaseDirectory, "Logs");
 Directory.CreateDirectory(logsPath);
 
 Log.Logger = new LoggerConfiguration()
