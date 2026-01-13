@@ -1,10 +1,12 @@
+using Asp.Versioning;
 using MediatR;
 using MediatRHandlers.Application.Customers.Commands;
 using MediatRHandlers.Application.Customers.Queries;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
-[Route("api/customers")]
+[Route("api/v{v:apiVersion}/customers")]
+[ApiVersion(1.0)]
 public class CustomersController : ControllerBase
 {
     private readonly IMediator _mediator;

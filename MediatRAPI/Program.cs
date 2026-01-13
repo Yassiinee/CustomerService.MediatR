@@ -1,6 +1,11 @@
-﻿using MediatR;
+﻿using Asp.Versioning;
+using Asp.Versioning.ApiExplorer;
+using MediatR;
+using MediatRAPI;
 using MediatRHandlers.Infrastructure;
+using Microsoft.Extensions.Options;
 using Serilog;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -53,6 +58,21 @@ builder.Services.AddControllers();
 builder.Services.AddHealthChecks();
 
 // ------------------------
+// API Versioning Configuration
+// ------------------------
+builder.Services.AddApiVersioning(options =>
+{
+    options.DefaultApiVersion = new ApiVersion(1, 0);
+    options.AssumeDefaultVersionWhenUnspecified = true;
+    options.ReportApiVersions = true;
+    options.ApiVersionReader = new UrlSegmentApiVersionReader();
+}).AddApiExplorer(options =>
+{
+    options.GroupNameFormat = "'v'V";
+    options.SubstituteApiVersionInUrl = true;
+});
+
+// ------------------------
 // MediatR Configuration
 // ------------------------
 builder.Services.AddMediatR(cfg =>
@@ -69,9 +89,10 @@ builder.Services.AddApplication();
 // Swagger Configuration
 // ------------------------
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
+builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+builder.Services.AddSwaggerGen(options =>
 {
-    c.SwaggerDoc("v1", new() { Title = "CustomerService.MediatR API", Version = "v1" });
+    options.OperationFilter<SwaggerDefaultValues>();
 });
 
 WebApplication app = builder.Build();
@@ -82,7 +103,16 @@ WebApplication app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options =>
+    {
+        IReadOnlyList<ApiVersionDescription> descriptions = app.DescribeApiVersions();
+        foreach (ApiVersionDescription description in descriptions)
+        {
+            string url = $"/swagger/{description.GroupName}/swagger.json";
+            string name = description.GroupName.ToUpperInvariant();
+            options.SwaggerEndpoint(url, name);
+        }
+    });
 }
 
 app.UseHttpsRedirection();
