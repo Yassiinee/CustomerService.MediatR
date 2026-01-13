@@ -66,7 +66,8 @@ MediatRHandlers
  │   │   └─ Validators
  │   ├─ Common
  │   │   ├─ Interfaces
- │   │   └─ Behaviors
+ │   │   ├─ Behaviors
+ │   │   └─ Exceptions
  │
  ├─ Domain
  │   └─ Entities
@@ -82,6 +83,8 @@ MediatRHandlers
 
 ```
 HTTP Request
+   ↓
+Global Exception Middleware
    ↓
 Controller
    ↓
@@ -101,7 +104,7 @@ Response
 ## 🚀 Getting Started
 
 ### Prerequisites
-- .NET 7 or later
+- .NET 10 or later
 - Visual Studio / VS Code / Rider
 
 ### Run the API
@@ -140,6 +143,9 @@ This ensures:
 ✔ Clean Architecture  
 ✔ MediatR pipelines  
 ✔ FluentValidation  
+✔ **Global exception middleware**  
+✔ **Serilog structured logging**  
+✔ **API versioning**  
 ✔ Swagger documentation  
 ✔ Scalable folder structure  
 ✔ Test-friendly design  
@@ -148,13 +154,12 @@ This ensures:
 
 ## 🔮 Planned Enhancements
 
-- Global exception middleware
-- Serilog structured logging
 - EF Core + migrations
 - Domain events
 - Caching (Redis)
-- API versioning
 - Unit & integration tests
+- Authentication & Authorization
+- Rate limiting
 
 ---
 

@@ -2,6 +2,7 @@
 using Asp.Versioning.ApiExplorer;
 using MediatR;
 using MediatRAPI;
+using MediatRAPI.Middleware;
 using MediatRHandlers.Infrastructure;
 using Microsoft.Extensions.Options;
 using Serilog;
@@ -100,6 +101,8 @@ WebApplication app = builder.Build();
 // ------------------------
 // HTTP Request Pipeline
 // ------------------------
+app.UseGlobalExceptionHandler();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

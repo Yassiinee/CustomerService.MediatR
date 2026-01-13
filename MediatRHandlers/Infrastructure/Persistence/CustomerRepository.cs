@@ -5,7 +5,7 @@ namespace MediatRHandlers.Infrastructure.Persistence;
 
 public class CustomerRepository : ICustomerRepository
 {
-    private static readonly List<Customer> _customers = new();
+    private static readonly List<Customer> _customers = [];
 
     public Task AddAsync(Customer customer)
     {
@@ -15,6 +15,6 @@ public class CustomerRepository : ICustomerRepository
 
     public Task<Customer> GetByIdAsync(Guid id)
     {
-        return Task.FromResult(_customers.First(c => c.Id == id));
+        return Task.FromResult(_customers.FirstOrDefault(c => c.Id == id));
     }
 }

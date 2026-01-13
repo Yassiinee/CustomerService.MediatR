@@ -1,4 +1,5 @@
 using MediatR;
+using MediatRHandlers.Application.Common.Exceptions;
 using MediatRHandlers.Application.Common.Interfaces;
 using MediatRHandlers.Application.Customers.Dtos;
 using MediatRHandlers.Domain.Entities;
@@ -12,6 +13,9 @@ public class GetCustomerByIdQueryHandler(ICustomerRepository repository) : IRequ
     public async Task<CustomerDto> Handle(GetCustomerByIdQuery request, CancellationToken ct)
     {
         Customer customer = await _repository.GetByIdAsync(request.Id);
-        return new CustomerDto(customer.Id, customer.Name, customer.Email);
+
+        return customer == null
+            ? throw new NotFoundException(nameof(Customer), request.Id)
+            : new CustomerDto(customer.Id, customer.Name, customer.Email);
     }
 }
