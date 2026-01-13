@@ -5,14 +5,9 @@ using MediatRHandlers.Domain.Entities;
 
 namespace MediatRHandlers.Application.Customers.Queries;
 
-public class GetCustomerByIdQueryHandler : IRequestHandler<GetCustomerByIdQuery, CustomerDto>
+public class GetCustomerByIdQueryHandler(ICustomerRepository repository) : IRequestHandler<GetCustomerByIdQuery, CustomerDto>
 {
-    private readonly ICustomerRepository _repository;
-
-    public GetCustomerByIdQueryHandler(ICustomerRepository repository)
-    {
-        _repository = repository;
-    }
+    private readonly ICustomerRepository _repository = repository;
 
     public async Task<CustomerDto> Handle(GetCustomerByIdQuery request, CancellationToken ct)
     {

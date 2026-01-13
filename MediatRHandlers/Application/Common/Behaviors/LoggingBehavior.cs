@@ -9,7 +9,7 @@ namespace MediatRHandlers.Application.Common.Behaviors
         {
             Log.Information("Handling {RequestName} {@Request}", typeof(TRequest).Name, request);
 
-            TResponse response = await next();
+            TResponse response = await next(cancellationToken);
 
             Log.Information("Handled {RequestName} {@Response}", typeof(TRequest).Name, response);
 

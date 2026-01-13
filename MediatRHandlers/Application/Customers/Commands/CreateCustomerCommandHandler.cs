@@ -5,14 +5,9 @@ using Serilog;
 
 namespace MediatRHandlers.Application.Customers.Commands;
 
-public class CreateCustomerCommandHandler : IRequestHandler<CreateCustomerCommand, Guid>
+public class CreateCustomerCommandHandler(ICustomerRepository repository) : IRequestHandler<CreateCustomerCommand, Guid>
 {
-    private readonly ICustomerRepository _repository;
-
-    public CreateCustomerCommandHandler(ICustomerRepository repository)
-    {
-        _repository = repository;
-    }
+    private readonly ICustomerRepository _repository = repository;
 
     public async Task<Guid> Handle(CreateCustomerCommand request, CancellationToken ct)
     {
