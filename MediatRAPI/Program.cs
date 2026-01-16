@@ -1,10 +1,13 @@
-﻿using Asp.Versioning;
+﻿using System.Text;
+using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
 using MediatR;
 using MediatRAPI;
 using MediatRAPI.Middleware;
 using MediatRHandlers.Infrastructure;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -53,6 +56,33 @@ builder.Services.AddCors(options =>
 });
 
 // ------------------------
+// JWT Authentication
+// ------------------------
+string jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? string.Empty;
+string jwtAudience = builder.Configuration["Jwt:Audience"] ?? string.Empty;
+string jwtKey = builder.Configuration["Jwt:Key"] ?? string.Empty;
+
+byte[] signingKeyBytes = Encoding.UTF8.GetBytes(jwtKey);
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = jwtIssuer,
+            ValidAudience = jwtAudience,
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(jwtKey))
+        };
+    });
+
+builder.Services.AddAuthorization();
+
+// ------------------------
 // Core Services
 // ------------------------
 builder.Services.AddControllers();
@@ -91,10 +121,7 @@ builder.Services.AddApplication();
 // ------------------------
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
-builder.Services.AddSwaggerGen(options =>
-{
-    options.OperationFilter<SwaggerDefaultValues>();
-});
+builder.Services.AddSwaggerGen();
 
 WebApplication app = builder.Build();
 

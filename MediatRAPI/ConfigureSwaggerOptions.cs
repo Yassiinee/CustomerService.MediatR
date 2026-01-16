@@ -15,6 +15,19 @@ public class ConfigureSwaggerOptions(IApiVersionDescriptionProvider provider) : 
         {
             options.SwaggerDoc(description.GroupName, CreateInfoForApiVersion(description));
         }
+
+        // Add a basic JWT bearer scheme so Swagger UI knows about the Authorization header.
+        OpenApiSecurityScheme bearerScheme = new()
+        {
+            Scheme = "bearer",
+            BearerFormat = "JWT",
+            Type = SecuritySchemeType.Http,
+            In = ParameterLocation.Header,
+            Name = "Authorization",
+            Description = "JWT Authorization header using the Bearer scheme."
+        };
+
+        options.AddSecurityDefinition("Bearer", bearerScheme);
     }
 
     private static Microsoft.OpenApi.OpenApiInfo CreateInfoForApiVersion(ApiVersionDescription description)
