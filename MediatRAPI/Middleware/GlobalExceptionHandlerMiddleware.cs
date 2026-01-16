@@ -42,10 +42,12 @@ public class GlobalExceptionHandlerMiddleware(RequestDelegate next)
                     StatusCode = (int)statusCode,
                     Message = "Validation failed.",
                     Details = string.Join("; ", validationException.Errors.Select(e => e.ErrorMessage)),
-                    Errors = validationException.Errors.ToDictionary(
-                        e => e.PropertyName,
-                        e => e.ErrorMessage
-                    )
+                    Errors = validationException.Errors
+                        .GroupBy(e => e.PropertyName)
+                        .ToDictionary(
+                            g => g.Key,
+                            g => string.Join("; ", g.Select(e => e.ErrorMessage))
+                        )
                 };
                 break;
 
