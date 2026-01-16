@@ -38,7 +38,12 @@ public abstract class IntegrationTestBase : IClassFixture<CustomWebApplicationFa
             PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower
         });
 
-        return tokenResponse!.AccessToken;
+        if (tokenResponse is null)
+        {
+            throw new InvalidOperationException($"Failed to deserialize token response. Content: {content}");
+        }
+
+        return tokenResponse.AccessToken;
     }
 
     protected void SetAuthorizationHeader(string token)
