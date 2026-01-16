@@ -33,6 +33,7 @@ namespace MediatRAPI.Controllers
         }
     }
 
+    [ApiController]
     [Route("api/auth")]
     public class AuthController(IConfiguration configuration) : ControllerBase
     {

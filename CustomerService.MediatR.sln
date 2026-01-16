@@ -1,11 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.31903.59
+# Visual Studio Version 18
+VisualStudioVersion = 18.1.11312.151 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediatRAPI", "MediatRAPI\MediatRAPI.csproj", "{566A6C89-C50B-44C3-9B84-5EB677E64493}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediatRHandlers", "MediatRHandlers\MediatRHandlers.csproj", "{D3CC586B-7267-4193-879C-557A606F3821}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediatRAPI.IntegrationTests", "MediatRAPI.IntegrationTests\MediatRAPI.IntegrationTests.csproj", "{1A5E4882-2036-A197-AA52-71A903E25322}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediatRAPI.UnitTests", "MediatRAPI.UnitTests\MediatRAPI.UnitTests.csproj", "{122C1DF6-AE3B-12CD-2C87-F6D1AAF62CB3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +45,30 @@ Global
 		{D3CC586B-7267-4193-879C-557A606F3821}.Release|x64.Build.0 = Release|Any CPU
 		{D3CC586B-7267-4193-879C-557A606F3821}.Release|x86.ActiveCfg = Release|Any CPU
 		{D3CC586B-7267-4193-879C-557A606F3821}.Release|x86.Build.0 = Release|Any CPU
+		{1A5E4882-2036-A197-AA52-71A903E25322}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A5E4882-2036-A197-AA52-71A903E25322}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A5E4882-2036-A197-AA52-71A903E25322}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1A5E4882-2036-A197-AA52-71A903E25322}.Debug|x64.Build.0 = Debug|Any CPU
+		{1A5E4882-2036-A197-AA52-71A903E25322}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1A5E4882-2036-A197-AA52-71A903E25322}.Debug|x86.Build.0 = Debug|Any CPU
+		{1A5E4882-2036-A197-AA52-71A903E25322}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A5E4882-2036-A197-AA52-71A903E25322}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A5E4882-2036-A197-AA52-71A903E25322}.Release|x64.ActiveCfg = Release|Any CPU
+		{1A5E4882-2036-A197-AA52-71A903E25322}.Release|x64.Build.0 = Release|Any CPU
+		{1A5E4882-2036-A197-AA52-71A903E25322}.Release|x86.ActiveCfg = Release|Any CPU
+		{1A5E4882-2036-A197-AA52-71A903E25322}.Release|x86.Build.0 = Release|Any CPU
+		{122C1DF6-AE3B-12CD-2C87-F6D1AAF62CB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{122C1DF6-AE3B-12CD-2C87-F6D1AAF62CB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{122C1DF6-AE3B-12CD-2C87-F6D1AAF62CB3}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{122C1DF6-AE3B-12CD-2C87-F6D1AAF62CB3}.Debug|x64.Build.0 = Debug|Any CPU
+		{122C1DF6-AE3B-12CD-2C87-F6D1AAF62CB3}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{122C1DF6-AE3B-12CD-2C87-F6D1AAF62CB3}.Debug|x86.Build.0 = Debug|Any CPU
+		{122C1DF6-AE3B-12CD-2C87-F6D1AAF62CB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{122C1DF6-AE3B-12CD-2C87-F6D1AAF62CB3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{122C1DF6-AE3B-12CD-2C87-F6D1AAF62CB3}.Release|x64.ActiveCfg = Release|Any CPU
+		{122C1DF6-AE3B-12CD-2C87-F6D1AAF62CB3}.Release|x64.Build.0 = Release|Any CPU
+		{122C1DF6-AE3B-12CD-2C87-F6D1AAF62CB3}.Release|x86.ActiveCfg = Release|Any CPU
+		{122C1DF6-AE3B-12CD-2C87-F6D1AAF62CB3}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
